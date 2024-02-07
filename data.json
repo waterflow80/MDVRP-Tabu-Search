@@ -1,0 +1,54 @@
+{
+  "depots": [
+    {
+      "depotId": 1,
+      "location": [2, 1.5],
+      "vehicles": [{ "vehicleId": 1, "capacity": 8 }],
+      "packages": [
+        { "packageId": 6, "size": -1 },
+        { "packageId": 7, "size": -1 }
+      ]
+    },
+    {
+      "depotId": 2,
+      "location": [-3, 3.5],
+      "vehicles": [{ "vehicleId": 2, "capacity": 4 }],
+      "packages": [
+        { "packageId": 5, "size": -1 },
+        { "packageId": 2, "size": -1 }
+      ]
+    },
+    {
+      "depotId": 3,
+      "location": [-3, -2.5],
+      "vehicles": [{ "vehicleId": 3, "capacity": 12 }],
+      "packages": [
+        { "packageId": 1, "size": -1 },
+        { "packageId": 3, "size": -1 },
+        { "packageId": 4, "size": -1 }
+      ]
+    },
+    {
+      "depotId": 4,
+      "location": [3, -2],
+      "vehicles": [{ "vehicleId": 4, "capacity": 10 }, { "vehicleId": 5, "capacity": 10 }],
+      "packages": [
+        { "packageId": 8, "size": -1 },
+        { "packageId": 9, "size": -1 },
+        { "packageId": 10, "size": -1 }
+      ]
+    }
+  ],
+  "customers": [
+    { "customerId": 1, "location": [-5, 3], "packageId": 1 },
+    { "customerId": 2, "location": [-4, 2], "packageId": 2 },
+    { "customerId": 3, "location": [-3, 6], "packageId": 3 },
+    { "customerId": 4, "location": [1.5, 4], "packageId": 4 },
+    { "customerId": 5, "location": [4.5, 4], "packageId": 5 },
+    { "customerId": 6, "location": [6, 2.5], "packageId": 6 },
+    { "customerId": 7, "location": [6.5, -3], "packageId": 7 },
+    { "customerId": 8, "location": [4, -4], "packageId": 8 },
+    { "customerId": 9, "location": [-3, -5.5], "packageId": 9 },
+    { "customerId": 10, "location": [-5.5, -4.5], "packageId": 10 }
+  ]
+}
