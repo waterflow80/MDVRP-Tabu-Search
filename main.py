@@ -1,38 +1,43 @@
 from tabu import *
 
+# CONSTS
+DATA_DIR = 'data/p' # The folder where all the test instances are located
+
 # VARIABLES
 T = [] # tabu list: contains the list of changes
 TT = 4 # tabu tenure: max number of the same change allowed
 NUM_NEIGHBORS = 4 # the number of neighbors to search for on each iteration
-num_iterations = 1000 # the number of iterations of the algorithm = num of total solutions discovered
+NUM_ITERATIONS = 100 # the number of iterations of the algorithm = num of total solutions discovered
 
 if __name__ == "__main__":
   # BEGIN
-  current = generate_random_solution()
-  bst = current  # the best solution: to consider in the end
-  while num_iterations > 0:
-    neighbor_sols = generate_neighbor_solutions(current, NUM_NEIGHBORS, T)
-    current1 = best(allowed(neighbor_sols, T, TT))
-    if evaluate(current1) > evaluate(current):
-      print("-----> ASPIRATION")
-      # current1 is not better than current - We'll use the Aspiration Criteria (choosing from all of them, even non-allowed ones)
-      current = best_from_sol_change_pairs(neighbor_sols)
-    else:
-      current = current1
-    bst = min([bst, current], key=lambda sol: evaluate(sol))
-    # print("--------------------- NEIGHBOR SOLUTIONS ---------------------")
-    # for sol in neighbor_sols:
-    #   print("======= NEIGHBOR SOLUTION ====")
-    #   for route in sol.solution.routes:
-    #     print(route)
-    # print("--------------------------------------------------------------")
-    print("CURRENT", 5000 - num_iterations, "=>", evaluate(current))
-    print("BEST SOLUTION", 5000 - num_iterations, "=>", bst.cost)
-    num_iterations -= 1
+  for i in range(1, 12): # looping over the test instances under data/p*.txt
+    count = 0 # for the display only
+    #print("ITERATION N°",i)
+    T = TabuListQueue(max_living_change=5)
+    num_iterations = NUM_ITERATIONS
+    #print("--> Generating random solution")
+    current = generate_random_solution(DATA_DIR + str(i) + '.txt')
+    #print("--> FINISHED: Generating random solution")
+    bst = current  # the best solution: to consider in the end
+    while num_iterations > 0:
+      neighbor_sols = generate_neighbor_solutions(current, NUM_NEIGHBORS, T)
+      current1 = best(allowed(neighbor_sols, T, TT))
+      if evaluate(current1) > evaluate(current):
+        #print("-----> ASPIRATION")
+        # current1 is not better than current - We'll use the Aspiration Criteria (choosing from all of them, even non-allowed ones)
+        current = best_from_sol_change_pairs(neighbor_sols)
+      else:
+        current = current1
+      bst = min([bst, current], key=lambda sol: evaluate(sol))
+      #print("CURRENT", count, "=>", evaluate(current))
+      #print("BEST SOLUTION", count, "=>", bst.cost)
+      num_iterations -= 1
+      count += 1
 
   # END
-
-  for route in bst.routes:
-    print(route)
-  print("EVALUATION: ", bst.cost)
-  print("TABU LIST=", T[0:5])
+    print("====================== " + DATA_DIR + str(i) + '.txt' + " ========================")
+    # for route in bst.routes:
+    #   print(route)
+    print("BEST EVALUATION: ", bst.cost)
+    print("===================================================")

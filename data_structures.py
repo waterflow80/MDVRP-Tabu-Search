@@ -4,14 +4,14 @@ class Vehicle :
   def __init__(self, vehicle_id:int, capacity:int, depotId:int) -> None:
     # The capacity is the number of packages it can deliver (can be changed later)
     self.id = vehicle_id
+    self.capacity = capacity  # number of packages it can load (regardless of size, can be enhanced)
     self.depotId = depotId
-    self.capacity = capacity # number of packages it can load (regardless of size, can be enhanced)
   
   def __str__(self) -> str:
     return "Vehicle={id=" + str(self.id) + ", capacity=" + str(self.capacity) +"}"
 
 class Package:
-  def __init__(self, package_id:int, size:float) -> None:
+  def __init__(self, package_id:int, size:int) -> None:
     self.id = package_id
     self.size = size # m³ Metre Cube
 
@@ -20,7 +20,7 @@ class Node:
     self.location = location
 
 class Customer(Node):
-  def __init__(self, customer_id:int, location:Tuple[float], packageId:int) -> None:
+  def __init__(self, customer_id:int, location:Tuple[int, int], packageId:int) -> None:
     super().__init__(location)
     self.id = customer_id
     self.packgaeId = packageId # the id of the requested package
@@ -38,8 +38,11 @@ class Change:
     self.customer1 = customer1
     self.customer2 = customer2
 
+  def __str__(self) -> str:
+    return "[customer1={" + str(self.customer1.id) + "}, customer2={" + str(self.customer2.id) + "}]"
+
 class Depot(Node):
-  def __init__(self, depot_id:int, location:Tuple[float], vehicles: List[Vehicle], packages:List[Package]) -> None:
+  def __init__(self, depot_id:int=0, location:Tuple[int, int]=None, vehicles: List[Vehicle]=[], packages:List[Package]=[]) -> None:
     super().__init__(location)
     self.depotId = depot_id
     self.vehicles = vehicles
@@ -93,18 +96,23 @@ class SolutionChangePair:
     self.change = change
 
 class ProblemData:
-  def __init__(self, numDepots:int, depots:List[Depot], numCustomers:int, customers:List[Customer]) -> None:
+  def __init__(self, numDepots:int=0, depots:List[Depot]=None, numCustomers:int=0, customers:List[Customer]=None) -> None:
     self.numDepots = numDepots
     self.depots = depots
     self.numCustomers = numCustomers
-    self.cutomers = customers
-  
+    self.customers = customers
+
+  def add_package_to_all_depots(self, package:Package) -> None:
+    """adds the given package to all the depots"""
+    for depot_1 in self.depots:
+      depot_1.packages.append(package)
+
   def __str__(self) -> str:
     repr = "ProblemData={\nDepots="
     for depot in self.depots:
       repr += depot.__str__()
     repr += "\n"
-    for customer in self.cutomers:
+    for customer in self.customers:
       repr += customer.__str__()
     repr += "}"
     return repr
@@ -116,3 +124,4 @@ if __name__ == "__main__":
   print(depot.depotId)
   print(depot.location)
   print(depot.vehicles[0])
+

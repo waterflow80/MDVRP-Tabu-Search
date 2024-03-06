@@ -1,11 +1,11 @@
-from data import load_data, get_all_vehicles, get_all_customers, get_depot_by_id
+from data2 import load_data, get_all_vehicles, get_all_customers, get_depot_by_id, get_package_by_id, TabuListQueue
 from data_structures import *
 from utils import generate_id
 import random
 import math
 
 # Variables - Data
-problemData = load_data()
+#problemData = load_data()
 # T = [] # Tabu list (contains the list of changes)
 
 # Functions
@@ -15,12 +15,47 @@ def remove_elements_from_list(main_list, to_remove_list)->None:
         main_list.remove(elt)
 
 
-def generate_random_solution()->Solution:
+def get_required_capacity(problem_data:ProblemData, target_customers:List[Customer])->int:
+    """Return the required capacity for the packages of the given customers"""
+    required_capacity = 0
+    for customer in target_customers:
+
+        package = get_package_by_id(problem_data, customer.packgaeId)
+        required_capacity += package.size
+    return required_capacity
+
+def verify_vehicle_capacity(problem_data:ProblemData, target_customers:List[Customer], vehicle:Vehicle)->bool:
+    """verify that the given vehicle can carry out the packages of the given target_customers"""
+    vehicle_capacity = vehicle.capacity
+    required_capacity = get_required_capacity(problem_data, target_customers)
+    #print("VEHICLE CAPACITY: ", vehicle_capacity)
+    #print("REQUIRED CAPACITY: ", required_capacity)
+    return vehicle_capacity >= required_capacity
+
+
+def get_possible_customers(problem_data:ProblemData, customers_list:List[Customer], vehicle:Vehicle):
+    """Return the list of customers that the given vehicle can serve"""
+    vehicle_capacity = vehicle.capacity
+    customers_served = 0
+    required_capacity = 0
+    result_customers = []
+    while customers_served < len(customers_list) and required_capacity < vehicle_capacity:
+        max_capacity_customer = max(customers_list, key=lambda x: get_package_by_id(problem_data, x.packgaeId).size)
+        customers_list.remove(max_capacity_customer)
+        if get_required_capacity(problem_data, [max_capacity_customer]) < vehicle.capacity:
+            result_customers.append(max_capacity_customer)
+            customers_served += 1
+            required_capacity += get_package_by_id(problem_data, max_capacity_customer.packgaeId).size
+    return result_customers
+
+
+def generate_random_solution(data_file_path:str)->Solution:
     """generate a random solution out of the problemData"""
     # TODO include the capacity of the vehicles in the calculations
     # TODO just make a formula
-    all_vehicles = get_all_vehicles()
-    all_customers = get_all_customers()
+    problem_data = load_data(data_file_path)
+    all_vehicles = get_all_vehicles(problem_data)
+    all_customers = get_all_customers(problem_data)
     random.shuffle(all_customers) # add randomness in the selection of customers
     solution = Solution()
     i = 0
@@ -28,10 +63,15 @@ def generate_random_solution()->Solution:
         # still customers to serve
         if i != len(all_vehicles) - 1:
             target_customers = random.sample(all_customers, random.randrange(1, len(all_customers)+1))
+            while not verify_vehicle_capacity(problem_data, target_customers, all_vehicles[i]):
+                # print("Vehicle capacity not respected!")
+                #TODO: Can be optimized to reduce the calculation time for this process
+                #TODO: Don't take it random, but rather one by one sequentially
+                target_customers = random.sample(all_customers, random.randrange(1, len(all_customers)+1))
         else:
             # last vehicle, take all the remaining customers
-            target_customers = all_customers[0:]
-        start_depot = get_depot_by_id(all_vehicles[i].depotId)
+            target_customers = get_possible_customers(problem_data, all_customers[0:], all_vehicles[i])
+        start_depot = get_depot_by_id(problem_data, data_file_path, all_vehicles[i].depotId)
         route = Route(generate_id(),start_depot, target_customers, all_vehicles[i])
         solution.addRoute(route)
         remove_elements_from_list(all_customers, target_customers)  # remove the chosen customers
@@ -92,7 +132,7 @@ def switch_customers_in_solution(current_sol:Solution, sol_customers:List[SolCus
     return temp_sol1
 
 
-def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_list:list)->List[SolutionChangePair]:
+def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_list:TabuListQueue)->List[SolutionChangePair]:
     """ generate num_neighbors neighbor solutions and save the change of each solution in T
     see docs in the Readme file"""
     sol_change_pairs = []
@@ -114,15 +154,15 @@ def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_li
         sol_change_pair.solution = new_solution
         sol_change_pair.change = Change(sample_sol_customers[0].customer, sample_sol_customers[1].customer)
         sol_change_pairs.append(sol_change_pair)
-        tabu_list.append(sol_change_pair.change)
+        tabu_list.enqueue_change(sol_change_pair.change)
     return sol_change_pairs
 
-def allowed(sol_change_pairs: List[SolutionChangePair], tabu_list:list, tabu_tenure:int)->List[Solution]:
+def allowed(sol_change_pairs: List[SolutionChangePair], tabu_list:TabuListQueue, tabu_tenure:int)->List[Solution]:
     """return only the allowed solutions from the given solution
     in which the change """
     allowed_solutions = []
     for solChangePair in sol_change_pairs:
-        if solChangePair.change in tabu_list and tabu_list.count(solChangePair.change) > tabu_tenure:
+        if solChangePair.change in tabu_list.tabu_list and tabu_list.tabu_list.count(solChangePair.change) > tabu_tenure:
             continue
         # else: allowed
         allowed_solutions.append(solChangePair.solution)
