@@ -6,7 +6,7 @@ DATA_DIR = 'data/p' # The folder where all the test instances are located
 # VARIABLES
 T = [] # tabu list: contains the list of changes
 TT = 4 # tabu tenure: max number of the same change allowed
-NUM_NEIGHBORS = 4 # the number of neighbors to search for on each iteration
+NUM_NEIGHBORS = 7 # the number of neighbors to search for on each iteration
 NUM_ITERATIONS = 100 # the number of iterations of the algorithm = num of total solutions discovered
 
 if __name__ == "__main__":
@@ -23,7 +23,8 @@ if __name__ == "__main__":
     bst = current  # the best solution: to consider in the end
     while num_iterations > 0:
       neighbor_sols = generate_neighbor_solutions(current, NUM_NEIGHBORS, T)
-      current1 = best(allowed(neighbor_sols, T, TT))
+      neighbor_solutions = list(map(lambda x: x.solution, neighbor_sols))
+      current1 = best(neighbor_solutions)
       if evaluate(current1) > evaluate(current):
         #print("-----> ASPIRATION")
         # current1 is not better than current - We'll use the Aspiration Criteria (choosing from all of them, even non-allowed ones)
@@ -37,7 +38,7 @@ if __name__ == "__main__":
       count += 1
 
   # END
-    print("====================== " + DATA_DIR + str(i) + '.txt' + " ========================")
+    print("====================== " + DATA_DIR + str(i) + '.txt' + " ==================")
     # for route in bst.routes:
     #   print(route)
     print("BEST EVALUATION: ", bst.cost)

@@ -132,6 +132,13 @@ def switch_customers_in_solution(current_sol:Solution, sol_customers:List[SolCus
     return temp_sol1
 
 
+def contains_change(tabu_list:TabuListQueue, change:Change):
+    for change1 in tabu_list.tabu_list:
+        if change1.customer1.id == change.customer1.id and change1.customer2.id == change.customer2.id:
+            return True
+    return False
+
+
 def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_list:TabuListQueue)->List[SolutionChangePair]:
     """ generate num_neighbors neighbor solutions and save the change of each solution in T
     see docs in the Readme file"""
@@ -154,7 +161,8 @@ def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_li
         sol_change_pair.solution = new_solution
         sol_change_pair.change = Change(sample_sol_customers[0].customer, sample_sol_customers[1].customer)
         sol_change_pairs.append(sol_change_pair)
-        tabu_list.enqueue_change(sol_change_pair.change)
+        if not contains_change(tabu_list, sol_change_pair.change):
+            tabu_list.enqueue_change(sol_change_pair.change)
     return sol_change_pairs
 
 def allowed(sol_change_pairs: List[SolutionChangePair], tabu_list:TabuListQueue, tabu_tenure:int)->List[Solution]:
