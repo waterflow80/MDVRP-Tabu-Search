@@ -1,5 +1,5 @@
 from tabu import *
-
+from time import time
 # CONSTS
 DATA_DIR = 'data/p' # The folder where all the test instances are located
 
@@ -10,6 +10,7 @@ NUM_NEIGHBORS = 4 # the number of neighbors to search for on each iteration
 NUM_ITERATIONS = 100 # the number of iterations of the algorithm = num of total solutions discovered
 
 if __name__ == "__main__":
+  start_time = time()
   # BEGIN
   for i in range(1, 12): # looping over the test instances under data/p*.txt
     count = 0 # for the display only
@@ -41,3 +42,5 @@ if __name__ == "__main__":
     #   print(route)
     print("BEST EVALUATION: ", bst.cost)
     print("===================================================")
+  end_time = time()
+  print("Total execution time:", end_time - start_time, " seconds")
