@@ -72,3 +72,6 @@ The data.py was used to parse our initial `data.json` test data file, and it is 
 ## Current Limitations/Possible Enhancements
 - Currently the `generate_random_solution()` function is fully random, and it may sometimes give bad results, unless executed several times to increase the probability of getting different configuration. So we should consider using some heuristics on that function and make it not commpletly random.
 - We can consider using multi-threaing and parrallel programming to increase performance.
+
+## Final Words
+If you find it useful, we appreciate that you give it a star.
