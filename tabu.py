@@ -49,10 +49,12 @@ def get_possible_customers(problem_data:ProblemData, customers_list:List[Custome
     return result_customers
 
 
-def generate_random_solution(data_file_path:str)->Solution:
+def generate_random_solution(data_file_path:str, initial:bool=False)->Solution:
     """generate a random solution out of the problemData"""
     # TODO include the capacity of the vehicles in the calculations
     # TODO just make a formula
+    if initial:
+        random.seed(1)  # Generate the same initial solution in each iteration
     problem_data = load_data(data_file_path)
     all_vehicles = get_all_vehicles(problem_data)
     all_customers = get_all_customers(problem_data)
@@ -81,6 +83,7 @@ def generate_random_solution(data_file_path:str)->Solution:
     # print("SOLUTION EVAL=>", evaluate(solution))
     # print("SOLUTION COST=>", solution.cost)
     # print("--------------------------------------")
+    random.seed() # change back to the complete randomness (override the previous random.seed(1))
     return solution
 
 
@@ -142,6 +145,7 @@ def contains_change(tabu_list:TabuListQueue, change:Change):
 def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_list:TabuListQueue)->List[SolutionChangePair]:
     """ generate num_neighbors neighbor solutions and save the change of each solution in T
     see docs in the Readme file"""
+    random.seed()
     sol_change_pairs = []
     sol_customers = get_all_sol_customers(current_sol)  # a list of SolCustomer objects
     for i in range(num_neighbors):
