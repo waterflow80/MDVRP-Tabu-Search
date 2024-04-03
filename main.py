@@ -5,7 +5,6 @@ DATA_DIR = 'data/p' # The folder where all the test instances are located
 
 # VARIABLES
 T = [] # tabu list: contains the list of changes
-TT = 4 # tabu tenure: max number of the same change allowed
 NUM_NEIGHBORS = 30 # the number of neighbors to search for on each iteration
 NUM_ITERATIONS = 1000 # the number of iterations of the algorithm = num of total solutions discovered
 MAX_LIVING_CHANGE = 30
