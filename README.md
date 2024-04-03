@@ -57,6 +57,18 @@ In order to easily understand the code, we recommend that you start with `main.p
 
 At any time, while reading the algorithm, you can refer to the `data_structures.py` file in order to know what every class or object is made of.
 
+## Performance & Evaluation
+In this section, we'll try to compare multiple execution results varying the different hyper-parameters:
+- **UM_NEIGHBORS**: the neighbor of neighbors to choose from at each iteration.
+- **MAX_LIVING_CHANGE**: the maximum number of iterations a `change` can live in the **tabu list**.
+- **NUM_ITERATIONS**: the number of iterations to perform before stop.
+
+The following table shows the different results when executing the program on test instance **p11.txt**:
+![Screenshot from 2024-04-03 15-02-17](https://github.com/waterflow80/MDVRP-Tabu-Search/assets/82417779/644dae28-3387-487c-81f8-0800546e12f6)
+
+We can see that with each **increase** of one of the provided hyer-parameters, we get an **increase in performace** (and of course an increase in execution time).
+
+**Note** that the evaluation is the total distance traveled by the cars, so the lower it is the better the evaluation is.
 ## Run
 To run the code locally, you can follow the following steps (Linux, but very similar to Windows):
 ```bash
@@ -65,6 +77,8 @@ cd MDVRP-Tabu-Search
 # Edit your hyper-paramters in main.py (at the top of the script)
 python3.x main.py # This will run the algorithm on all the test files under `data/`
 ```
+
+**Note:** [here](https://github.com/waterflow80/MDVRP-Tabu-Search/blob/b4f8174f8270bde93d6c340b35ae8e96d62c6944/main.py#L16) you can define the range of the test instances files to run on.
 
 ## Things to note
 The data.py was used to parse our initial `data.json` test data file, and it is no longer used. There have been some changes in the data structures, eg: `float --> int` some attributes, etc. So be sure to check them before using `data.py` and the `data.json` test data.
