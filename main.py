@@ -6,14 +6,14 @@ DATA_DIR = 'data/p' # The folder where all the test instances are located
 # VARIABLES
 T = [] # tabu list: contains the list of changes
 TT = 4 # tabu tenure: max number of the same change allowed
-NUM_NEIGHBORS = 20 # the number of neighbors to search for on each iteration
-NUM_ITERATIONS = 500 # the number of iterations of the algorithm = num of total solutions discovered
-MAX_LIVING_CHANGE = 15
+NUM_NEIGHBORS = 30 # the number of neighbors to search for on each iteration
+NUM_ITERATIONS = 1000 # the number of iterations of the algorithm = num of total solutions discovered
+MAX_LIVING_CHANGE = 30
 
 if __name__ == "__main__":
   start_time = time()
   # BEGIN
-  for i in range(11, 12): # looping over the test instances under data/p*.txt
+  for i in range(1, 2): # looping over the test instances under data/p*.txt
     count = 0 # for the display only
     #print("ITERATION N°",i)
     T = TabuListQueue(max_living_change=MAX_LIVING_CHANGE)

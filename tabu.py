@@ -142,7 +142,8 @@ def contains_change(tabu_list:TabuListQueue, change:Change):
     return False
 
 
-def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_list:TabuListQueue)->List[SolutionChangePair]:
+def generate_neighbor_solutions(current_sol:Solution,
+                                num_neighbors:int, tabu_list:TabuListQueue)->List[SolutionChangePair]:
     """ generate num_neighbors neighbor solutions and save the change of each solution in T
     see docs in the Readme file"""
     random.seed()
@@ -153,15 +154,6 @@ def generate_neighbor_solutions(current_sol:Solution, num_neighbors:int, tabu_li
         sample_sol_customers = random.sample(sol_customers, 2) # the two customers to switch
         new_solution = switch_customers_in_solution(current_sol, sample_sol_customers)
         new_solution.cost = evaluate(new_solution)
-        # print("++++++++++CURRENT++++++++++++")
-        # for cust in current_sol.routes[0].route:
-        #     print(cust)
-        # print("+++++++++++++++++++++++++++++")
-        # print("++++++++++NEW++++++++++++++++")
-        # for cust in new_solution.routes[0].route:
-        #     print(cust)
-        #print("+++++++++++++++++++++++++++++")
-
         sol_change_pair.solution = new_solution
         sol_change_pair.change = Change(sample_sol_customers[0].customer, sample_sol_customers[1].customer)
         sol_change_pairs.append(sol_change_pair)
