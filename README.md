@@ -59,7 +59,7 @@ At any time, while reading the algorithm, you can refer to the `data_structures.
 
 ## Performance & Evaluation
 In this section, we'll try to compare multiple execution results varying the different hyper-parameters:
-- **UM_NEIGHBORS**: the neighbor of neighbors to choose from at each iteration.
+- **NUM_NEIGHBORS**: the neighbor of neighbors to choose from at each iteration.
 - **MAX_LIVING_CHANGE**: the maximum number of iterations a `change` can live in the **tabu list**.
 - **NUM_ITERATIONS**: the number of iterations to perform before stop.
 
